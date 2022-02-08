@@ -1,0 +1,45 @@
+* QuikTable
+  Generate truth tables representing combinational logic from
+  Ocaml expressions.
+** Usage
+   Write your Boolean equations at the bottom of
+   ~quicktable.ml~ inside the ~spec~ expression using
+   the infix operators defined.
+   #+BEGIN_SRC ocaml
+     ...
+     ...
+     let (||!) a b = Not (Or  (a, b)) in
+     let (^^!) a b = Not (Xor (a, b)) in
+
+     [
+       "sum"  , (i "a" ^^ i "b") ^^ i "c";
+       "carry", (i "a" && i "b") ^^ (i "c" && (i "a" ^^ i "b"))
+     ]
+     ;;
+     ...
+     ...
+   #+END_SRC
+   The above example defines the Boolean equations of a full
+   adder circuit with two outputs: sum and carry. The inputs
+   of the circuit are automatically detected. If two inputs
+   have the same name, they are considered equal (even if
+   they are in different equations).
+
+   Running the Ocaml interpreter on the above example yields
+   the following:
+   #+BEGIN_SRC bash
+     $ ocaml quicktable.ml
+     a b c | sum carry
+     =================
+     0 0 0 | 0   0
+     0 0 1 | 1   0
+     0 1 0 | 1   0
+     0 1 1 | 0   1
+     1 0 0 | 1   0
+     1 0 1 | 0   1
+     1 1 0 | 0   1
+     1 1 1 | 1   1
+   #+END_SRC
+
+** License
+   MIT
